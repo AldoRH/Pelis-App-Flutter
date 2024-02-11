@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:pelis_app/models/models.dart';
 import '../widgets/widgets.dart';
 
 
@@ -10,18 +11,20 @@ class DetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final String movie = ModalRoute.of(context)?.settings.arguments.toString() ?? 'No se encontro la pelicula';
+    final Movie movie = ModalRoute.of(context)!.settings.arguments as Movie;
 
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          _CustomAppbar(),
+          _CustomAppbar(movie),
 
           SliverList(
             delegate: SliverChildListDelegate([
-              _PosterAndTitle(),
-              _Overview(),
-              CastingCards(),
+              _PosterAndTitle(movie),
+              _Overview(movie),
+              _Overview(movie),
+              _Overview(movie),
+              CastingCards(movie.id),
             ])
             )
         ],
@@ -31,6 +34,10 @@ class DetailsScreen extends StatelessWidget {
 }
 
 class _CustomAppbar extends StatelessWidget {
+  const _CustomAppbar(this.movie);
+
+  final Movie movie;
+
 
   @override
   Widget build(BuildContext context) {
@@ -45,12 +52,12 @@ class _CustomAppbar extends StatelessWidget {
           width: double.infinity,
           alignment: Alignment.bottomCenter,
           color: Colors.black12,
-          padding: const EdgeInsets.only(bottom: 10),
-          child: const Text("movie.title", style: TextStyle(fontSize: 16),),
+          padding: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
+          child:  Text(movie.title, style: const TextStyle(fontSize: 16), textAlign: TextAlign.center,),
         ),
-        background: const FadeInImage(
-          placeholder: AssetImage("assets/loading.gif"),
-          image: NetworkImage('https://via.placeholder.com/500x300'),
+        background:  FadeInImage(
+          placeholder: const AssetImage("assets/loading.gif"),
+          image: NetworkImage(movie.fullBackdropPath),
           fit: BoxFit.cover,
            
            ) ,
@@ -61,38 +68,50 @@ class _CustomAppbar extends StatelessWidget {
 
 
 class _PosterAndTitle extends StatelessWidget {
+  const _PosterAndTitle(this.movie);
+  final Movie movie;
+
 
   @override
   Widget build(BuildContext context) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+    final size = MediaQuery.of(context).size;
+
     return Container(
       margin: const EdgeInsets.only(top: 20),
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: FadeInImage(
-              placeholder: AssetImage('assets/no-image.jpg'),
-              image: NetworkImage('https://via.placeholder.com/300x400'),
-              height: 150,
-              ),
+          Hero(
+            tag: movie.heroId!,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: FadeInImage(
+                placeholder: const AssetImage('assets/no-image.jpg'),
+                image: NetworkImage(movie.fullPosterImg),
+                height: 150,
+                ),
+            ),
           ),
           const SizedBox(width: 20,),
 
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('movie.title' , style: Theme.of(context).textTheme.headlineSmall, overflow: TextOverflow.ellipsis , maxLines: 2,),
-              Text('movie.originaltitle' , style: Theme.of(context).textTheme.headlineSmall, overflow: TextOverflow.ellipsis , maxLines: 2,),
-
-              Row(
-                children: [
-                  const Icon(Icons.star_outlined, size: 15, color: Colors.grey,),
-                  const SizedBox(width: 5,),
-                  Text('movie.rating', style: Theme.of(context).textTheme.bodySmall)
-                ],
-              ),
-            ],
+          ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: size.width - 190),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(movie.title , style: textTheme.headlineSmall, overflow: TextOverflow.ellipsis , maxLines: 2, ),
+                Text(movie.originalTitle , style: textTheme.headlineSmall, overflow: TextOverflow.ellipsis , maxLines: 2,),
+            
+                Row(
+                  children: [
+                    const Icon(Icons.star_outlined, size: 15, color: Colors.grey,),
+                    const SizedBox(width: 5,),
+                    Text('${movie.voteAverage}', style: Theme.of(context).textTheme.bodySmall)
+                  ],
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -102,12 +121,14 @@ class _PosterAndTitle extends StatelessWidget {
 }
 
 class _Overview extends StatelessWidget {
+  const _Overview(this.movie);
+  final Movie movie;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      child: Text('Nisi in ullamco dolore nostrud dolor nostrud ullamco id sunt. Reprehenderit dolore aliqua cillum sit excepteur. Anim elit ut non incididunt cupidatat. Tempor laborum aliquip nostrud sit. Voluptate deserunt ipsum eu excepteur aliquip sunt tempor cillum magna occaecat quis laboris occaecat. Magna nisi voluptate exercitation aliquip eu amet velit in qui consectetur. Ad consectetur aute quis enim esse anim excepteur. Voluptate sint et elit nisi esse ullamco ad non irure laboris aliquip ea voluptate. Deserunt qui quis esse qui amet amet consequat sint excepteur ullamco. Cupidatat consequat dolor anim exercitation dolore laborum dolore et labore cupidatat. Incididunt aliqua excepteur labore irure officia reprehenderit nisi magna laborum in irure nostrud deserunt.', 
+      child: Text(movie.overview, 
       textAlign: TextAlign.justify,
       style: Theme.of(context).textTheme.titleMedium,
       ),
