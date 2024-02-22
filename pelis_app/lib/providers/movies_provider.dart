@@ -2,11 +2,16 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 import 'package:pelis_app/helpers/debouncer.dart';
 import 'package:pelis_app/models/models.dart';
 
+
 class MoviesProvider extends ChangeNotifier{
+
 
   List<Movie> onDisplayMovies = [];
   List<Movie> popularMovies = [];
@@ -24,12 +29,12 @@ class MoviesProvider extends ChangeNotifier{
   Stream <List<Movie>> get suggestionStream => _suggestionStreamController.stream;
 
 
-  final String _apikey = "8bf48193e6b8410322f8fe79cab24b38";
+  
+  final String? _apikey = dotenv.env['API_KEY'];
   final String _baseUrl = "api.themoviedb.org";
   final String _language = "es-ES";
 
   MoviesProvider(){
-
     getOnDisplayMovies();
     getPopularMovies();
   }
