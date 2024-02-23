@@ -5,7 +5,7 @@
 Esta es una aplicación simple para ver películas que utiliza la API de The Movie Database (TMDb). Puedes explorar películas, ver detalles y disfrutar de información detallada sobre tus películas favoritas.
 
 ## Requisitos previos
-Antes de ejecutar la aplicación, asegúrate de tener Flutter instalado en tu sistema. Puedes encontrar instrucciones para instalar Flutter aquí.
+Antes de ejecutar la aplicación, asegúrate de tener Flutter instalado en tu sistema. Puedes encontrar instrucciones para instalar Flutter [aquí](https://flutter.dev/).
 
 ## Configuración de API_KEY
 Para obtener datos de películas de TMDb, necesitarás una clave de API. Sigue estos pasos para obtener tu clave:
